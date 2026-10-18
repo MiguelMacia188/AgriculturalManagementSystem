@@ -1,0 +1,17 @@
+{
+  "name": "SIGA",
+  "short_name": "SIGA",
+  "description": "Sistema de Gestión Agrícola",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f6f8f7",
+  "theme_color": "#064e3b",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

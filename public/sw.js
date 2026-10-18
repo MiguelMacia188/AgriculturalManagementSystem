@@ -1,44 +1,32 @@
-const CACHE = 'siga-cache-v1';
-const OFFLINE_URL = '/offline';
+const CACHE_NAME = 'siga-cache-v2';
+const URLS_TO_CACHE = ['/', '/manifest.webmanifest'];
 
-self.addEventListener('install', (e) => {
-  e.waitUntil(
-    caches.open(CACHE).then((cache) => {
-      return cache.addAll([
-        '/',
-        '/css/app.css',
-        '/js/app.js',
-        '/favicon.ico',
-        '/offline'
-      ]);
-    })
-  );
-  self.skipWaiting();
+self.addEventListener('install', (event) => {
+    event.waitUntil(
+        caches.open(CACHE_NAME).then((cache) => cache.addAll(URLS_TO_CACHE))
+    );
+    self.skipWaiting();
 });
 
-self.addEventListener('activate', (e) => {
-  e.waitUntil(self.clients.claim());
+self.addEventListener('activate', (event) => {
+    event.waitUntil(
+        caches.keys().then((keys) => Promise.all(
+            keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key))
+        ))
+    );
+    self.clients.claim();
 });
 
 self.addEventListener('fetch', (event) => {
-  const url = new URL(event.request.url);
+    if (event.request.method !== 'GET') return;
 
-  if (url.pathname.startsWith('/api/')) {
-    return event.respondWith(fetch(event.request).catch(() => new Response(null, { status: 503 })));
-  }
-
-  event.respondWith(
-    caches.match(event.request).then((cached) => {
-      if (cached) return cached;
-      return fetch(event.request)
-        .then((response) => {
-          if (event.request.method === 'GET' && response && response.status === 200) {
-            const copy = response.clone();
-            caches.open(CACHE).then((c) => c.put(event.request, copy));
-          }
-          return response;
+    event.respondWith(
+        caches.match(event.request).then((cached) => {
+            return cached || fetch(event.request).then((response) => {
+                const cloned = response.clone();
+                caches.open(CACHE_NAME).then((cache) => cache.put(event.request, cloned));
+                return response;
+            }).catch(() => caches.match('/'));
         })
-        .catch(() => caches.match(OFFLINE_URL));
-    })
-  );
+    );
 });

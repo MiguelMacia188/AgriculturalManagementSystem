@@ -1,52 +1,50 @@
 # SIGA - Sistema de Gestión Agrícola
 
-SIGA es una aplicación web orientada a la gestión agrícola de fincas bananeras y de plátano, con enfoque en operación, trazabilidad, inventario, alertas y reportes.
+SIGA es una plataforma para gestionar lotes, insumos, calendarización agrícola, cosechas y alertas para fincas de banano, plátano y cultivos permanentes.
 
-Este repositorio incluye:
-- Frontend en React + Vite + Tailwind con una interfaz profesional para admin y trabajador de campo.
-- Estructura de backend Laravel 11 para migraciones, modelos y endpoints de negocio.
-- Diseño PWA-ready con sincronización offline para uso rural.
+## Requisito principal
+- XAMPP con Apache + MySQL + PHP 8.2+
+- Composer
+- Node.js + npm (opcional para front React)
 
-## Stack
-- Frontend: React 19 + Vite + TypeScript + Tailwind CSS
-- Backend base: Laravel 11 (migraciones y API stubs)
-- Persistencia: MySQL / Laravel Eloquent
-- Offline: Service Worker + IndexedDB + cola de sincronización
-- Reportes: PDF con Dompdf (preparado)
+## Estructura del repositorio
+- `src/` : interfaz frontend React + Vite
+- `public/` : assets públicos, manifest PWA y service worker
+- `backend/laravel/` : base Laravel 11 para API y lógica del negocio
 
-## Instalación rápida del frontend
-1. npm install
-2. npm run dev
-3. abrir http://localhost:5173
+## Ejecutar frontend localmente
+1. En la raíz del repo:
+   - `npm install`
+   - `npm run dev`
+2. Abrir en navegador:
+   - `http://localhost:5173`
 
-## Estructura principal
-- src/App.tsx: UI SIGA completa
-- src/index.css: estilos y diseño visual corporativo
-- public/sw.js: service worker base
-- backend/laravel: base de Laravel 11 con migraciones/modelos/controladores para backend
+## Ejecutar backend local con XAMPP
+1. Crear base de datos en MySQL: `siga_db`
+2. Ubicar el proyecto en `htdocs` o un VirtualHost Apache
+3. Ir a `backend/laravel`
+4. Ejecutar:
+   - `composer install`
+   - `cp .env.example .env`
+   - `php artisan key:generate`
+   - `php artisan migrate --seed`
+   - `php artisan storage:link`
+5. Iniciar el servidor:
+   - `php artisan serve --host=0.0.0.0 --port=8000`
+6. Probar endpoints:
+   - `http://localhost:8000/api/health`
+   - `http://localhost:8000/api/login`
 
-## Modo producción / Laravel
-Se prepara la estructura para arrancar con XAMPP y Laravel 11:
-1. composer install
-2. cp .env.example .env
-3. configurar DB_DATABASE=siga_db, DB_USERNAME=root, DB_PASSWORD=
-4. php artisan key:generate
-5. php artisan migrate --seed
-6. php artisan storage:link
-7. php artisan schedule:work
+## Credenciales demo
+- Admin: `admin@siga.co` / `administrador`
+- Campo: `campo@siga.co` / `trabajador`
 
-## Roles
-- Administrador: gestión total de lotes, insumos, calendario, usuarios y reportes.
-- Trabajador de campo: registro móvil de aplicaciones y cosechas, trabajo offline y sincronización.
+## Módulos del sistema
+- Usuarios y autenticación por roles
+- Lotes, inventario y proveedores
+- Calendario de aplicaciones y vigilancia
+- Cosechas y alertas
+- Reportes PDF y PWA offline
 
-## Offline / sincronización
-- El frontend guarda registros locales y los envía cuando la conexión regresa.
-- El backend se deja preparado para recibir `POST /api/aplicaciones` y `POST /api/cosechas`.
-
-## Estado
-La implementación actual incluye:
-- Dashboard administrativo responsivo
-- Módulos de lotes, calendario, insumos, cosechas, reportes y usuarios
-- Vista móvil para trabajador de campo
-- PWA/service worker ready
-- Base Laravel para migraciones y lógica de negocio
+## Notas finales
+Este repositorio ya incluye la base de sistema SIGA, diseño visual, modelo de datos y estructura del backend. Para completarlo a nivel de producción, se recomienda terminar la capa de autenticación con Breeze/Sanctum, conectar cada módulo a bases de datos reales y desplegar en un entorno real con HTTPS.
