@@ -1,0 +1,10 @@
+{
+  "description": "Streamline agricultural management for banana and plantain crops with user-friendly dashboards, real-time reporting, and mobile access for field workers.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
